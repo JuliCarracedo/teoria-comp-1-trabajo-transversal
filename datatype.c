@@ -74,11 +74,12 @@ Tdata str_from_list(Tdata list){
 
     ast_str = create_empty_str_ast();
     if(list == NULL) return NULL;
-    else if(list->nodeType != LIST) return NULL;
     else{
         while(list != NULL){
             if(list->data->nodeType == STR){
                 concatStr(ast_str, list->data);
+            } else {
+                concatStr(ast_str, str_from_list(list->data));
             }
             list = list->next;
         }
