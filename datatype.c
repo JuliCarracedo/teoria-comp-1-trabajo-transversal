@@ -20,6 +20,15 @@ Tdata create_str_from_char(char c){
     return data;
 }
 
+Tdata create_str_from_chain(str chain){
+    Tdata data;
+    data = (Tdata) malloc(sizeof (dataType));
+    data->nodeType = STR;
+    copiaCadena(data->string, chain)
+;
+    return data;
+}
+
 Tdata create_empty_str_ast(){
     Tdata data;
     data = (Tdata) malloc(sizeof (dataType));
@@ -124,7 +133,7 @@ void imprime_dato(Tdata data){
 
 int compareStr(Tdata dat_1, Tdata dat_2){
     int comp;
-    if(dat_1->nodeType != STR || dat_2->nodeType != STR) comp = 1;
+    if(dat_1->nodeType != STR || dat_2->nodeType != STR) comp = -1;
     else comp = comparaCadena(dat_1->string, dat_2->string);
     return comp;
 }
@@ -200,8 +209,26 @@ void concat(Tdata c1, Tdata c2){
     }
 }
 
+Tdata pop(Tdata * list){
+    Tdata aux, del;
+    if((*list) != NULL){
+        if((*list)->nodeType != LIST && (*list)->nodeType != SET ){ return NULL; }
+        else if((*list)->data == NULL ){ return NULL; }
+        else if((*list)->next == NULL ){
+            aux = (*list)->data;
+            (*list)->data = NULL;
+        } else{
+            aux = (*list)->data;
+            del = (*list);
+            *list = (*list)->next;
+            free(del);
+        }
+    }
+    return aux;
+}
 
 int belongs(Tdata elem, Tdata set);
+
 int equals(Tdata elem1, Tdata elem2){
     int is_equal;
     Tdata aux;
@@ -316,6 +343,7 @@ void remove_set(Tdata* set, Tdata elem){
 
 void insert_set(Tdata set, Tdata elem){
     Tdata new;
+
     if(set == NULL) return;
     else if(set->nodeType != SET) return;
     else{
@@ -399,3 +427,46 @@ Tdata intersection_set(Tdata set1, Tdata set2){
     return new;
 }
 
+int size(Tdata set){
+    int i;
+
+    if(set == NULL) return -1;
+    if(set->nodeType != SET) return -1;
+
+    i=0;
+    while(set != NULL){
+        if(set->data != NULL) i++;
+        set = set->next;
+    }
+
+    return i;
+}
+
+int a_subset_of_b (Tdata elem1, Tdata elem2){
+    int is_contained;
+    Tdata aux;
+    is_contained = 0;
+
+    if(elem1->nodeType == SET){
+        is_contained = 1;
+        aux = elem1;
+        while(aux != NULL && is_contained == 1){
+            is_contained = belongs(aux->data, elem2);
+            aux = aux->next;
+        }
+    } else {
+        printf("Inprocesable. El elemento contenido y el elemento contenedor deben ser sets");
+    }
+
+    return is_contained;
+}
+
+int isSet(Tdata elem){
+    return elem->nodeType == SET;
+}
+int isList(Tdata elem){
+    return elem->nodeType == LIST;
+}
+int isStr(Tdata elem){
+    return elem->nodeType == STR;
+}

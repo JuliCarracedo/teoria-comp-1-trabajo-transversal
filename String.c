@@ -45,7 +45,7 @@ int comparaCadena(str cad1, str cad2){
     if(cad1[i] != cad2[i]) iguales = 0;
     i++;
   }
-
+  if(cad1[i] != cad2[i]) iguales = 0;
   return iguales;
 }
 

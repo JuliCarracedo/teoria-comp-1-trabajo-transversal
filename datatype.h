@@ -24,7 +24,8 @@ Tdata create_str_ast();
 Tdata create_list();
 Tdata create_set();
 Tdata list_from_str(Tdata);
-Tdata str_from_list(Tdata list);
+Tdata str_from_list(Tdata);
+Tdata create_str_from_chain(str);
 
 // Funciones agnosticas
 void imprime_dato(Tdata);
@@ -48,11 +49,19 @@ int belongs(Tdata elem, Tdata set);
 void remove_set(Tdata* set, Tdata elem);
 void deep_free(Tdata* set);
 
+Tdata pop(Tdata * list); //LIST AND SET
+
 // SET Algebra
 Tdata union_set(Tdata A, Tdata B);
 Tdata intersection_set(Tdata A, Tdata B);
 Tdata difference_set(Tdata A, Tdata B);
 
-int subset(Tdata A, Tdata B);
+int size(Tdata A);
+
+int a_subset_of_b(Tdata A, Tdata B);
+
+int isSet(Tdata elem);
+int isStr(Tdata elem);
+int isList(Tdata elem);
 
 #endif
