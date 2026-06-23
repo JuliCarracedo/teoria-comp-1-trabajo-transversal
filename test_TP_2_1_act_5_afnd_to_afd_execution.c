@@ -53,30 +53,33 @@ int main(){
   printf("---- AFND convertido a AFD de ejemplo TP 2.1 Ejercicio 5 ----\n");
 
   b = afnd_to_afd(a);
-  // imprimeAutomata(b);
+  imprimeAutomata(b);
   printf("\n");
-  // printf("1) Palabra: 001\n");
-  // if (procesaPalabra(create_str_from_chain("001"), b)) printf("Es aceptada\n");
-  // else printf("No es aceptada\n");
 
-  // printf("2) Palabra: 010111\n");
-  // if (procesaPalabra(create_str_from_chain("010111"), b)) printf("Es aceptada\n");
-  // else printf("No es aceptada\n");
+  printf("---- Procesamos las mismas palabras ----\n");
 
-  // printf("3) Palabra: 011\n");
-  // if (procesaPalabra(create_str_from_chain("011"), b)) printf("Es aceptada\n");
-  // else printf("No es aceptada\n");
+  printf("1) Palabra: 001\n");
+  if (procesaPalabra(create_str_from_chain("001"), b)) printf("Es aceptada\n");
+  else printf("No es aceptada\n");
 
-  // printf("4) Palabra: 100\n");
-  // if (procesaPalabra(create_str_from_chain("100"), b)) printf("Es aceptada\n");
-  // else printf("No es aceptada\n");
+  printf("2) Palabra: 010111\n");
+  if (procesaPalabra(create_str_from_chain("010111"), b)) printf("Es aceptada\n");
+  else printf("No es aceptada\n");
 
-  // printf("4) Palabra: 01001\n");
-  // if (procesaPalabra(create_str_from_chain("01001"), b)) printf("Es aceptada\n");
-  // else printf("No es aceptada\n");
+  printf("3) Palabra: 011\n");
+  if (procesaPalabra(create_str_from_chain("011"), b)) printf("Es aceptada\n");
+  else printf("No es aceptada\n");
 
-  // printf("4) Palabra: 01110\n");
-  // if (procesaPalabra(create_str_from_chain("01110"), b)) printf("Es aceptada\n");
-  // else printf("No es aceptada\n");
+  printf("4) Palabra: 100\n");
+  if (procesaPalabra(create_str_from_chain("100"), b)) printf("Es aceptada\n");
+  else printf("No es aceptada\n");
+
+  printf("4) Palabra: 01001\n");
+  if (procesaPalabra(create_str_from_chain("01001"), b)) printf("Es aceptada\n");
+  else printf("No es aceptada\n");
+
+  printf("4) Palabra: 01110\n");
+  if (procesaPalabra(create_str_from_chain("01110"), b)) printf("Es aceptada\n");
+  else printf("No es aceptada\n");
   return 0;
 }

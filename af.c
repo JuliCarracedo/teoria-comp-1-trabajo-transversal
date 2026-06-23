@@ -157,6 +157,7 @@ int hasAllNecesaryTransitions(Q states, Sigma alphabet, PTransicion delta){
 
 Automata creaAutomata(int determinista, Q states, Sigma alphabet, PTransicion delta, Tdata initialState, F acceptState){
   Automata afd;
+
   if (determinista && !hasAllNecesaryTransitions(states, alphabet, delta)){
     printf("Función delta debe estar completamente definida para un AFD\n");
   } else {
@@ -195,7 +196,7 @@ Tdata consumeCaracterAFND(Tdata input, Tdata currentState, PTransicion delta){
   output = create_set();
   while(delta!= NULL){
     if (equals(input, delta->inputSymbol) && equals(currentState, delta->inputState)){
-      insert_set( output, delta->outputState);
+      insert_set( output, copia_dato(delta->outputState));
     }
     delta = delta->next;
   }
@@ -283,40 +284,42 @@ void process_AFND_delta_for_transformation(PTransicion * nuevoDelta, Sigma nuevo
 
   Tdata nuevoSigmaCopia, poppedSigma, setEntradasCopia, poppedState, accumulatorStates, accumulatorStatesAux, intersection, nuevosEstadosCopia;
 
-  accumulatorStates = create_set();
   nuevoSigmaCopia = copia_dato(nuevoSigma);
-  setEntradasCopia = copia_dato(setEntradas);
   nuevosEstadosCopia = copia_dato(nuevosEstados);
 
-  poppedSigma = pop(&nuevoSigmaCopia);
+  while(size(nuevoSigmaCopia) > 0){
+    poppedSigma = pop(&nuevoSigmaCopia);
 
-  while(poppedSigma!= NULL){
     accumulatorStates = create_set();
-    poppedState = pop(&setEntradasCopia);
-    while(poppedState!=NULL){
-      accumulatorStatesAux = union_set(accumulatorStates, consumeCaracterAFND(copia_dato(poppedSigma), copia_dato(poppedState), viejoDelta));
+    setEntradasCopia = copia_dato(setEntradas);
+
+    while(size(setEntradasCopia) > 0){
+      poppedState = pop(&setEntradasCopia);
+
+      accumulatorStatesAux = union_set(copia_dato(accumulatorStates), consumeCaracterAFND(poppedSigma, poppedState, viejoDelta));
+
       deep_free(&accumulatorStates);
       accumulatorStates = copia_dato(accumulatorStatesAux);
       deep_free(&accumulatorStatesAux);
+
+
       deep_free(&poppedState);
-      poppedState = pop(&setEntradasCopia);
     }
 
     addStateToQ(&nuevosEstados, copia_dato(str_from_list(accumulatorStates)));
 
-    intersection = intersection_set(viejoF, accumulatorStatesAux);
+    intersection = intersection_set(viejoF, accumulatorStates);
     if(size(intersection) > 0) insert_set(nuevoF, str_from_list(accumulatorStates));
+    deep_free(&intersection);
 
     addTransition(nuevosEstados, nuevoSigma, 1, nuevoDelta, copia_dato(poppedSigma), str_from_list(setEntradas), str_from_list(accumulatorStates));
 
-    deep_free(&intersection);
-    deep_free(&poppedSigma);
-    deep_free(&poppedState);
-    poppedSigma = pop(&nuevoSigmaCopia);
-  }
+    if(!equals(nuevosEstadosCopia, nuevosEstados)){
+      process_AFND_delta_for_transformation(nuevoDelta, nuevoSigma, viejoF, nuevoF, nuevosEstados, copia_dato(accumulatorStates), viejoDelta);
+    }
 
-  if(!equals(nuevosEstadosCopia, nuevosEstados)){
-    process_AFND_delta_for_transformation(nuevoDelta, nuevoSigma, viejoF, nuevoF, nuevosEstados, copia_dato(accumulatorStates), viejoDelta);
+    deep_free(&poppedSigma);
+    deep_free(&setEntradasCopia);
   }
 
   deep_free(&accumulatorStates);
@@ -355,7 +358,5 @@ Automata afnd_to_afd(Automata automata){
 
   process_AFND_delta_for_transformation(&nuevoDelta, nuevoSigma, viejoF, nuevoF, nuevosEstados, copia_dato(initialStateSet), viejoDelta);
 
-  imprimeDelta(nuevoDelta);
-
-  return creaAutomata(1, nuevosEstados, nuevoSigma, nuevoDelta, nuevoF, nuevoInicial);
+  return creaAutomata(1, nuevosEstados, nuevoSigma, nuevoDelta, nuevoInicial, nuevoF);
 }

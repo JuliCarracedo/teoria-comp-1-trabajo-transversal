@@ -373,11 +373,11 @@ Tdata union_set(Tdata set1, Tdata set2){
         new->data = NULL;
         new->next = NULL;
 
-        while(set1 != NULL){
+        while(set1 != NULL && set1->data != NULL){
             insert_set(new, set1->data);
             set1 = set1->next;
         }
-         while(set2 != NULL){
+         while(set2 != NULL && set2->data != NULL){
             insert_set(new, set2->data);
             set2 = set2->next;
         }
